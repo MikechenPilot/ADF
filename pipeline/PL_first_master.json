@@ -276,6 +276,36 @@
 					"variableName": "Todate",
 					"value": "@{div(sub(ticks(utcNow()), ticks('1970-01-01')),10000000)}"
 				}
+			},
+			{
+				"name": "sendemail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "load",
+						"dependencyConditions": [
+							"Skipped",
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-34.eastus.logic.azure.com:443/workflows/0bb544ec3cc14369b9a846bad5ba0cdf/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=Br32eiwhshGJU3g3Zdwp68JERFB5B1EJWibjJgWfyWI",
+					"body": {
+						"message": "the pipleline with run id @{pipeline().RunId} is having an issue, please have a look",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -317,6 +347,10 @@
 			"mplp_sql_logging_view": {
 				"type": "string",
 				"defaultValue": "vpipelinerun"
+			},
+			"receiver": {
+				"type": "string",
+				"defaultValue": "mikechenpilot2000@gmail.com"
 			}
 		},
 		"variables": {
